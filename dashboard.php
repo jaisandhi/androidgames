@@ -1,4 +1,4 @@
-<?php session_start(); if(!isset($_SESSION[ 'game_login'])){ header( 'location:login.php'); }else{ } ?>
+<?php session_start();include("classes/db_connect.php"); if(!isset($_SESSION[ 'game_login'])){ header( 'location:login.php'); }else{ } ?>
 <!DOCTYPE html>
 <html>
 
@@ -21,7 +21,7 @@
         });
     </script>
     <style>
-    .game_head{
+    /*.game_head{
       width: 89px;
       float: right;
       cursor: pointer;
@@ -40,7 +40,7 @@
       border: 1px solid #ccc;
       padding: 5px;
       float:left;
-    }
+    }*/
     .panel-front {
       margin-bottom: 20px;
       margin-top: 20px;
@@ -96,13 +96,7 @@
       color: #fff;
     }
     </style>
-    <script>
-$(".loader_img").show();
-  setTimeout(function () {
-     $('.loader_img').hide();
-     $(".loader_close").css('opacity','1');
-  }, 3000);
-    </script>
+
 </head>
 
 <body class="home">
@@ -174,13 +168,32 @@ $(".loader_img").show();
                 </div>
 
                 <div class="user-dashboard">
-                  <div class="col-xs-12 col-md-12 row">
-                      <img src="game_images/bggif.gif" style="width:103%;">
-                      <h2 class="img_text">Welcome To Android Games</h2>
+                  <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <img src="game_images/bggif.gif" style="width:100%;">
+                        <h2 class="img_text">Welcome To Android Games</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <?php
+                    if(isset($_GET['search'])){
+                      $selecttext = str_replace('\' ', '\'', ucwords(str_replace('\'', '\' ', strtolower($_GET['search']))));
+                    }else{
+                      $selecttext = 'default';
+                    }
+                  ?>
+                  <div class="col-md-4 col-md-offset-4">
+                    <select class="form-control category" id="category" name="category">
+                      <<option value="default">SubCategory</option>
+                      <?php $query = "SELECT * FROM game_category where category_status=0";$sql = $link->prepare($query);$sql->execute();foreach($sql as $row) { ?>
+                         <option value="<?php echo $row['id']?>"<?php if( $selecttext == $row['category_name'] ){ ?> selected="selected"<?php } ?>><?php echo $row['category_name'];?></option>
+                      <?php } ?>
+                    </select>
                   </div>
                 </div>
                 <div class="user-dashboard">
-
                   <h1>Action Games</h1>
                   <div class="row">
                     <div class="col-md-4">
@@ -237,7 +250,7 @@ $(".loader_img").show();
                   </div>
 
                 </div>
-                <div class="user-dashboard">
+                <!-- <div class="user-dashboard">
                   <h1>Games Starter Kit</h1>
                     <div class="row" style="margin-bottom:5px">
                         <div class="col-md-3">
@@ -264,9 +277,25 @@ $(".loader_img").show();
                     <div class="text-center">
                         <a href="" class="btn btn-sm btn-primary" style="margin-bottom:5px">See More</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
+    <script>
+$(".loader_img").show();
+  setTimeout(function () {
+     $('.loader_img').hide();
+     $(".loader_close").css('opacity','1');
+  }, 3000);
+  $('.category').on('change',function(){
+    if($('.category option:selected').val() == 'default'){
+      var form_url = 'dashboard.php';
+      window.location.replace(form_url);
+    }else{
+      var form_url = 'dashboard.php?search='+ $('.category option:selected').text().toUpperCase();
+      window.location.replace(form_url);
+    }
+  });
+    </script>
 </body>
 </html>
