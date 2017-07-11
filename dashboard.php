@@ -89,6 +89,12 @@
     .loader_close{
       opacity:0;
     }
+    .img_text{
+      position: absolute;
+      top: 43%;
+      left: 32%;
+      color: #fff;
+    }
     </style>
     <script>
 $(".loader_img").show();
@@ -105,15 +111,17 @@ $(".loader_img").show();
   </div>
   <div class="overlay"></div>
     <div class="container-fluid display-table loader_close">
+
         <div class="row display-table-row">
+
             <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
                 <div class="logo">
                     <a hef="dashboard.php">
-                        <!-- <h1 class="hidden-xs hidden-sm" style="font-size: 22px;color: #fff;font-family: serif;">Android<span style="color: #5383d3;">Games</span></h1>
-                        <h1 class="visible-xs visible-sm circle-logo" style="font-size: 22px;color: #fff;font-family: serif;">Android<span style="color: #5383d3;">Games</span></h1> -->
+                        <h1 class="hidden-xs hidden-sm" style="font-size: 22px;color: #fff;font-family: serif;">Android<span style="color: #5383d3;">Games</span></h1>
+                        <h1 class="visible-xs visible-sm circle-logo" style="font-size: 22px;color: #fff;font-family: serif;">Android<span style="color: #5383d3;">Games</span></h1>
 
-                        <img src="images/game_logo.png" alt="game_logo" class="hidden-xs hidden-sm">
-                        <img src="images/game_logo.png" alt="game_logo" class="visible-xs visible-sm circle-logo">
+                        <!-- <img src="images/game_logo.png" alt="game_logo" class="hidden-xs hidden-sm">
+                        <img src="images/game_logo.png" alt="game_logo" class="visible-xs visible-sm circle-logo"> -->
                     </a>
                 </div>
                 <div class="navi">
@@ -164,7 +172,15 @@ $(".loader_img").show();
                         </div>
                     </header>
                 </div>
+
                 <div class="user-dashboard">
+                  <div class="col-xs-12 col-md-12 row">
+                      <img src="game_images/bggif.gif" style="width:103%;">
+                      <h2 class="img_text">Welcome To Android Games</h2>
+                  </div>
+                </div>
+                <div class="user-dashboard">
+
                   <h1>Action Games</h1>
                   <div class="row">
                     <div class="col-md-4">
@@ -215,10 +231,11 @@ $(".loader_img").show();
                             </div>
                         </div>
                     </div>
-                  </div>
                     <div class="text-center">
                         <a href="" class="btn btn-info btn-sm" style="margin-bottom:5px">See More</a>
                     </div>
+                  </div>
+
                 </div>
                 <div class="user-dashboard">
                   <h1>Games Starter Kit</h1>
