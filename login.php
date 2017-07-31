@@ -1,43 +1,45 @@
 <?php include('header.php');?>
+<script>
+  $.removeCookie("flag");
+</script>
 <div class="container">
-    <div class="row">
-        <div class="col-sm-6 col-md-4 col-md-offset-4">
-            <div class="panel panel-default">
-                <div class="panel-heading headback text-center">
-                  <img src="images/game_logo.png" class="game_logo">
-                  <h4 style="width: 54%;margin-left: 96px;">Sign in to continue</h4>
-                  
-                </div>
-                <div class="panel-body">
-                    <form method="post">
-                      <div class="row">
-                          <div class="col-sm-12 col-md-10  col-md-offset-1 ">
-                              <div class="form-group">
-                                <input class="form-control mobile" placeholder="Mobile" id="mobile" name="mobile" type="text" maxlength="14">
-                              </div>
-                              <div class="form-group">
-                                  <p><img src="captcha.php" style="border:1px solid #ccc;width: 100%;height: 35px;"  alt="CAPTCHA"></p>
-                                  <p><input type="text" size="6" class="form-control" placeholder="Captcha" id="captcha" maxlength="5" name="captcha" value="">
-                              </div>
-                              <div class="form-group">
-                                  <span id="add_err"></span>
-                              </div>
-                              <div class="form-group">
-                                  <div id="loader" style="display:none;">
-                                    <img src="images/ajax-loader.gif">
-                                    <span style="color:#357ebd;">Validating...</span>
-                                  </div>
-                              </div>
-                              <div class="form-group">
-                                  <input class="btn btn-primary center-block login" value="Login" type="submit" id="log_but">
-                              </div>
-                          </div>
-                      </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="row">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+          <div class="panel panel-default">
+              <div class="panel-heading headback text-center">
+                <img src="images/game_logo.png" class="game_logo">
+                <h4 style="width: 54%;margin-left: 96px;">Sign in to continue</h4>
+              </div>
+              <div class="panel-body">
+                  <form method="post">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-10  col-md-offset-1 ">
+                            <div class="form-group">
+                              <input class="form-control mobile" placeholder="Mobile" id="mobile" name="mobile" type="text" maxlength="14">
+                            </div>
+                            <div class="form-group">
+                                <p><img src="captcha.php" style="border:1px solid #ccc;width: 100%;height: 35px;"  alt="CAPTCHA"></p>
+                                <p><input type="text" size="6" class="form-control" placeholder="Captcha" id="captcha" maxlength="5" name="captcha" value="">
+                            </div>
+                            <div class="form-group">
+                                <span id="add_err"></span>
+                            </div>
+                            <div class="form-group">
+                                <div id="loader" style="display:none;">
+                                  <img src="images/ajax-loader.gif">
+                                  <span style="color:#357ebd;">Validating...</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-primary center-block login" value="Login" type="submit" id="log_but">
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 <Script>
 $(document).ready(function() {
@@ -70,13 +72,18 @@ $(document).ready(function() {
                         $("#add_err").css("display", "block");
                         $("#loader").css("display", "none");
                         $("#add_err").html("<span style='color:red;'>check your captcha</span>");
-                    }else if(html == 'success'){
-                        $("#loader").css("display", "none");
-                        $("#add_err").css("display", "none");
-                        window.location.href = "dashboard.php";
                     }else if(html == 'login_error'){
                         $("#add_err").html("<span style='color:red;'>Check Your Mobile Number</span>");
                         $("#loader").css("display", "none");
+                    }else{
+                      var json = JSON.parse(html);
+                        $("#loader").css("display", "none");
+                        $("#add_err").css("display", "none");
+                        if(json.is_flag == 1){
+                          window.location.href = "dashboard.php?msisdn="+json.mobile+"&flag="+json.is_flag;
+                        }else if(json.is_flag == 2 && json.is_flag == 0){
+                          window.location.href = "login.php";
+                        }
                     }
                 },
                 beforeSend: function () {

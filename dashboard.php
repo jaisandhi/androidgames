@@ -1,127 +1,120 @@
-<?php session_start();include("classes/db_connect.php"); if(!isset($_SESSION[ 'game_login'])){ header( 'location:login.php'); }else{ } ?>
+<?php session_start();include("classes/db_connect.php");
+if(!isset($_SESSION[ 'game_login'])){
+  header( 'location:login.php');
+}
+$urlflag = filter_input( INPUT_GET, 'flag', FILTER_SANITIZE_URL );
+if($urlflag == 2 || $urlflag == 0){
+  session_destroy();
+  header( 'location:login.php');
+}
+?>
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Games - Dashboard </title>
-    <link href='http://fonts.googleapis.com/css?family=Cookie' rel='stylesheet' type='text/css'>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/dashboard.css" rel="stylesheet">
-    <script src="js/jquery-1.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('[data-toggle="offcanvas"]').click(function() {
-                $("#navigation").toggleClass("hidden-xs");
-            });
-        });
-    </script>
-    <style>
-    /*.game_head{
-      width: 89px;
-      float: right;
-      cursor: pointer;
-      color: #8e7979;
-      font-family: serif;
-      font-weight: normal;
-    }
-    .game_free{
-      width: 86px;
-      float: right;
-      color: #2dd02d;
-      text-decoration: underline;
-    }
-    .game_image{
-      width: 58%;
-      border: 1px solid #ccc;
-      padding: 5px;
-      float:left;
-    }*/
-    .panel-front {
-      margin-bottom: 20px;
-      margin-top: 20px;
-    }
-    .panel-front .panel-heading .panel-title img {
-        border-radius: 3px 3px 0px 0px;
-        width: 100%;
-    }
-    .panel-front .panel-heading {
-        padding: 0px;
-    }
-    .panel-front .panel-heading h4 {
-        line-height: 0;
-    }
-    .panel-front .panel-body h4 {
-        font-weight: bold;
-        margin-top: 5px;
-        margin-bottom: 15px;
-    }
-    .text-right {
-        margin-top: 10px;
-    }
-    .text-right {
-      margin-top: 10px;
-      width: 38%;
-      float: right;
-    }
-    .text-left {
-      margin-top: 10px;
-      width: 38%;
-      float: left;
-      color: #39ab39;
-    }
-    .panel-body {
-      padding: 15px;
-      background: rgba(200, 186, 212, 0.17);
-    }
-    .loader_img{
-      position: absolute;
-      right: 0;
-      top: 33%;
-      z-index: 99999;
-      left: 36%;
-      opacity: 1;
-    }
-    .loader_close{
-      opacity:0;
-    }
-    .img_text{
-      position: absolute;
-      top: 43%;
-      left: 32%;
-      color: #fff;
-    }
-    </style>
-
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games - Dashboard </title>
+<link href='http://fonts.googleapis.com/css?family=Cookie' rel='stylesheet' type='text/css'>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/dashboard.css" rel="stylesheet">
+<script src="js/jquery-1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/custom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+$.urlParam = function(name){
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	return results[1] || 0;
+}
+var urlflag = decodeURIComponent($.urlParam('flag'));
+var urlmobile = decodeURIComponent($.urlParam('msisdn'));
+if(urlflag == 2 || urlflag == 0){
+  window.location.href = "login.php";
+  $.removeCookie("flag");
+}else{
+  if($.cookie("flag") != 1){
+    $.ajax({
+    'type':'post',
+    url:"game_login_check.php?mode=updatevalidate&flag="+urlflag+"&mobile="+urlmobile,
+      success:function(data){
+        var json = JSON.parse(data);
+        $.cookie("flag", json.is_flag);
+      },
+    });
+  }
+}
+</script>
+<style>
+.panel-front {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.panel-front .panel-heading .panel-title img {
+    border-radius: 3px 3px 0px 0px;
+    width: 100%;
+}
+.panel-front .panel-heading {
+    padding: 0px;
+}
+.panel-front .panel-heading h4 {
+    line-height: 0;
+}
+.panel-front .panel-body h4 {
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+.panel-body {
+  padding: 15px;
+  background: rgba(200, 186, 212, 0.17);
+}
+.loader_img{
+  position: absolute;
+  right: 0;
+  top: 33%;
+  z-index: 99999;
+  left: 36%;
+  opacity: 1;
+}
+.loader_close{
+  opacity:0;
+}
+.img_text{
+  position: absolute;
+  top: 43%;
+  left: 32%;
+  color: #fff;
+}
+</style>
 </head>
-
 <body class="home">
   <div class="loader_img">
     <img src="game_images/car_loader_alpha-3.gif" alt="loader" class="loader">
   </div>
   <div class="overlay"></div>
     <div class="container-fluid display-table loader_close">
-
         <div class="row display-table-row">
-
             <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
                 <div class="logo">
                     <a hef="dashboard.php">
                         <h1 class="hidden-xs hidden-sm" style="font-size: 22px;color: #fff;font-family: serif;">Android<span style="color: #5383d3;">Games</span></h1>
                         <h1 class="visible-xs visible-sm circle-logo" style="font-size: 22px;color: #fff;font-family: serif;">Android<span style="color: #5383d3;">Games</span></h1>
-
                         <!-- <img src="images/game_logo.png" alt="game_logo" class="hidden-xs hidden-sm">
                         <img src="images/game_logo.png" alt="game_logo" class="visible-xs visible-sm circle-logo"> -->
                     </a>
                 </div>
                 <div class="navi">
                     <ul>
-                        <li class="active"><a href="dashboard.php"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a>
+                        <li class="active">
+                          <a href="dashboard.php"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a>
                         </li>
+                        <?php if($_SESSION['game_login']['role'] == "admin"){?>
+                        <!-- <li class="">
+                          <a href="game_register.php"><i class="fa fa-gamepad" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Game Register</span></a>
+                        </li> -->
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
@@ -166,7 +159,6 @@
                         </div>
                     </header>
                 </div>
-
                 <div class="user-dashboard">
                   <div class="row">
                     <div class="col-xs-12 col-md-12">
@@ -175,127 +167,40 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="row">
-                  <?php
-                    if(isset($_GET['search'])){
-                      $selecttext = str_replace('\' ', '\'', ucwords(str_replace('\'', '\' ', strtolower($_GET['search']))));
-                    }else{
-                      $selecttext = 'default';
-                    }
-                  ?>
                   <div class="col-md-4 col-md-offset-4">
                     <select class="form-control category" id="category" name="category">
-                      <<option value="default">SubCategory</option>
+                      <option value="default">SubCategory</option>
                       <?php $query = "SELECT * FROM game_category where category_status=0";$sql = $link->prepare($query);$sql->execute();foreach($sql as $row) { ?>
-                         <option value="<?php echo $row['id']?>"<?php if( $selecttext == $row['category_name'] ){ ?> selected="selected"<?php } ?>><?php echo $row['category_name'];?></option>
+                         <option value="<?php echo $row['id']?>"><?php echo $row['category_name'];?></option>
                       <?php } ?>
                     </select>
                   </div>
                 </div>
-                <div class="user-dashboard">
-                  <h1>Action Games</h1>
+                <div class="user-dashboard" id="original">
+                  <h1>Latest Games</h1>
                   <div class="row">
+                    <?php $query = "SELECT * FROM search_gameby_category where status=0 and is_deleted=0";
+                      $sql = $link->prepare($query);$sql->execute();foreach($sql as $row) { ?>
                     <div class="col-md-4">
                         <div class="panel panel-default panel-front">
                             <div class="panel-heading">
-                                <h4 class="panel-title"><a HREF="#"><img src="game_images/subway.png"></a></h4>
+                                <h4 class="panel-title"><img src="<?php echo $row['game_image'];?>"></h4>
                             </div>
                             <div class="panel-body">
-                                <h4>Subway Surfers</h4> Subway Surfers is an endless runner mobile game co-developed by Kiloo, and SYBO Games, private companies based in Denmark. It is available on Android, iOS, Kindle, and Windows Phone platforms.
-                                <div class="text-right">
-                                    <a href="" class="btn btn-danger btn-sm" role="button">Download</a>
-                                </div>
-                                <div class="text-left">
-                                  Free
-                                </div>
+                                <h4><?php echo $row['game_name'];?></h4>
+                                <p> <?php echo substr($row['game_description'],0,200);?> </p>
+                            </div>
+                            <div class="panel-footer text-center">
+                                <a class="btn btn-danger btn-sm download" href="javascript:void(0);" data-apk-file="<?php echo $row['apk_file_path'];?>" onclick="downloadfile('<?php echo $row['apk_file_path'];?>')" target="_self">Download</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-default panel-front">
-                            <div class="panel-heading">
-                                <h4 class="panel-title"><a HREF="#"><img src="game_images/got.png"></a></h4>
-                            </div>
-                            <div class="panel-body">
-                                <h4>Game Of Thrones</h4> Game of Thrones - A Telltale Games Series is a six part episodic game series set in the world of HBO's groundbreaking TV show. This new story tells of House Forrester, a noble family from the north of Westeros, loyal to the Starks of Winterfell.
-                                <div class="text-right">
-                                    <a href="" class="btn btn-danger btn-sm" role="button">Download</a>
-                                </div>
-                                <div class="text-left">
-                                  Free
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-default panel-front">
-                            <div class="panel-heading">
-                                <h4 class="panel-title"><a HREF="#"><img src="game_images/wd-2.png"></a></h4>
-                            </div>
-                            <div class="panel-body">
-                                <h4>The Walking Dead: Season Two</h4> The Walking Dead: Season Two is a five-part (Episodes 2-5 can be purchased via in-app) game series that continues the story of Clementine, a young girl orphaned by the undead apocalypse. Left to fend for herself, she has been forced to learn how to survive in a world gone mad.
-                                <div class="text-right">
-                                    <a href="" class="btn btn-danger btn-sm" role="button">Download</a>
-                                </div>
-                                <div class="text-left">
-                                  Free
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <a href="" class="btn btn-info btn-sm" style="margin-bottom:5px">See More</a>
-                    </div>
+                    <?php } ?>
                   </div>
-
                 </div>
-                <!-- <div class="user-dashboard">
-                  <h1>Games Starter Kit</h1>
-                    <div class="row" style="margin-bottom:5px">
-                        <div class="col-md-3">
-                          <img src="game_images/subway_surfers.png" class="game_image">
-                          <p class="game_head">Subway Surfers</p>
-                          <p class="game_free">Free </p>
-                        </div>
-                        <div class="col-md-3">
-                          <img src="game_images/candy_crush_saga.png" class="game_image">
-                          <p class="game_head">Candy Crush Saga </p>
-                          <p class="game_free">Free </p>
-                        </div>
-                        <div class="col-md-3" >
-                          <img src="game_images/moto_rider.png" class="game_image">
-                          <p class="game_head">Moto Rider GO: Highway Traffic </p>
-                          <p class="game_free">Free </p>
-                        </div>
-                        <div class="col-md-3" >
-                          <img src="game_images/train_racing_game.png" class="game_image">
-                            <p class="game_head">Train Racing Game </p>
-                          <p class="game_free">Free </p>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <a href="" class="btn btn-sm btn-primary" style="margin-bottom:5px">See More</a>
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
-    <script>
-$(".loader_img").show();
-  setTimeout(function () {
-     $('.loader_img').hide();
-     $(".loader_close").css('opacity','1');
-  }, 3000);
-  $('.category').on('change',function(){
-    if($('.category option:selected').val() == 'default'){
-      var form_url = 'dashboard.php';
-      window.location.replace(form_url);
-    }else{
-      var form_url = 'dashboard.php?search='+ $('.category option:selected').text().toUpperCase();
-      window.location.replace(form_url);
-    }
-  });
-    </script>
 </body>
 </html>

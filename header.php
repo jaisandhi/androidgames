@@ -12,6 +12,7 @@
 	<link href="css/footer.css" rel="stylesheet">
 	<script src="js/jquery-1.js"></script>
 	<script src="js/bootstrap.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 	<style>
 	body {
 		background-image: url('images/bg.png');
@@ -45,7 +46,7 @@
 <body>
 <header class="header-login-signup">
 	<div class="header-limiter">
-		<h1><a href="login.php">Android<span>Games</span></a></h1>
+		<h1><a href="/games">Android<span>Games</span></a></h1>
 		<nav class="pull-right">
 			<a href="login.php">Login</a>
 			<a href="register.php">Register</a>
